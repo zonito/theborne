@@ -464,14 +464,14 @@
     "Tesla"
    ],
    "name": "Tesla Wall Connector",
-   "room": "Garage",
+   "room": "Driveway",
    "status": {
     "date": "Oct 2026",
     "kind": "working",
     "label": "Working"
    },
    "w": 124,
-   "what": "The Tesla Wall Connector in the garage, the home charger for the car.",
+   "what": "The Tesla Wall Connector at the driveway, the home charger for the car.",
    "x": 895,
    "y": 556
   },
@@ -485,7 +485,7 @@
     ""
    ],
    "name": "Tesla Model Y",
-   "room": "Garage",
+   "room": "Driveway",
    "status": {
     "date": "Oct 2026",
     "kind": "working",
@@ -527,14 +527,14 @@
     "outside box"
    ],
    "name": "Electricity meter (outside)",
-   "room": "Outside meter box, by the boundary wall",
+   "room": "Outside meter box on the driveway boundary wall, by the gate",
    "status": {
     "date": "24 Oct 2026",
     "kind": "working",
     "label": "Working"
    },
    "w": 110,
-   "what": "The electricity meter itself, in an outside meter box by the boundary wall. The smart gas meter sits in its own outside box nearby.",
+   "what": "The electricity meter itself, in the white outside meter box on the driveway boundary wall, beside the pedestrian gate. The smart gas meter sits in its own outside box nearby.",
    "x": 75,
    "y": 716
   }
