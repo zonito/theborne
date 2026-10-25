@@ -33,12 +33,22 @@ function NotFoundComponent() {
   );
 }
 
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  try {
+    return JSON.stringify(error) ?? "Unknown error";
+  } catch {
+    return "Unknown error";
+  }
+}
+
 function ErrorComponent({ error }: ErrorComponentProps) {
   // Chunk-load failures (e.g. the dev server restarted while this tab was
   // loading) reject the lazy route import. router.invalidate() cannot refetch
   // a rejected module, so retry with a full document reload — the only
   // recovery that refetches the page's JavaScript.
-  const message = error instanceof Error ? error.message : String(error ?? "Unknown error");
+  const message = errorMessage(error);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
