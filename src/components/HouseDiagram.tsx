@@ -53,18 +53,18 @@ export function HouseDiagram({
       <rect className="hd-walls" x="250" y="190" width="540" height="510" />
       <line className="hd-slab" x1="250" y1="350" x2="790" y2="350" />
       <line className="hd-slab" x1="250" y1="510" x2="790" y2="510" />
-      <rect className="hd-garage" x="812" y="500" width="168" height="200" />
-      <path className="hd-roof" d="M804,502 L896,450 L988,502" strokeWidth="4" />
+      <rect className="hd-drive" x="796" y="693" width="188" height="7" />
+      <rect className="hd-boundwall" x="968" y="492" width="9" height="208" />
       <rect className={cn("hd-win", st("rad2") === "heating" && "lit")} x="259" y="266" width="26" height="48" rx="3" />
       <rect className={cn("hd-win", st("rads") === "heating" && "lit")} x="259" y="424" width="26" height="48" rx="3" />
 
-      {[["SECOND FLOOR", 262, 212], ["FIRST FLOOR", 262, 372], ["GROUND FLOOR", 262, 532], ["GARAGE", 824, 524]].map(([t, x, y]) => (
+      {[["SECOND FLOOR", 262, 212], ["FIRST FLOOR", 262, 372], ["GROUND FLOOR", 262, 532], ["DRIVEWAY", 822, 516]].map(([t, x, y]) => (
         <text key={t as string} className="hd-floor" x={x} y={y}>{t}</text>
       ))}
       {[
         ["Kitchen", 300, 548], ["Reception room", 596, 524], ["Utility room", 706, 524],
         ["Entrance hall + WC", 258, 688], ["Bedrooms", 322, 490], ["En-suite", 648, 478],
-        ["Bedroom", 452, 338], ["Study", 430, 232], ["Balcony", 806, 248], ["Garden (behind)", 824, 724],
+        ["Bedroom", 452, 338], ["Study", 430, 232], ["Balcony", 806, 248], ["Garden (behind)", 806, 750],
       ].map(([t, x, y]) => (
         <text key={t as string} className="hd-room" x={x} y={y}>{t}</text>
       ))}

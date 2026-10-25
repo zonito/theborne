@@ -472,8 +472,8 @@
    },
    "w": 124,
    "what": "The Tesla Wall Connector at the driveway, the home charger for the car.",
-   "x": 895,
-   "y": 556
+   "x": 848,
+   "y": 548
   },
   {
    "detail": "Charging days are the main reason daily electricity swings between about 13 and 22 kWh.",
@@ -493,7 +493,7 @@
    },
    "w": 124,
    "what": "A Tesla Model Y Long Range, rear wheel drive, leased.",
-   "x": 895,
+   "x": 890,
    "y": 650
   },
   {
@@ -535,8 +535,8 @@
    },
    "w": 110,
    "what": "The electricity meter itself, in the white outside meter box on the driveway boundary wall, beside the pedestrian gate. The smart gas meter sits in its own outside box nearby.",
-   "x": 75,
-   "y": 716
+   "x": 912,
+   "y": 596
   }
  ],
  "floors": [
@@ -826,24 +826,16 @@
    "label": "Car charger feed",
    "points": [
     [
-     72,
-     672
-    ],
-    [
-     72,
-     694
+     858,
+     588
     ],
     [
      884,
-     694
+     566
     ],
     [
-     884,
-     600
-    ],
-    [
-     892,
-     580
+     908,
+     550
     ]
    ]
   },
@@ -853,12 +845,24 @@
    "label": "Grid to electricity meter",
    "points": [
     [
-     70,
-     670
+     125,
+     646
     ],
     [
-     70,
-     692
+     150,
+     646
+    ],
+    [
+     150,
+     732
+    ],
+    [
+     884,
+     732
+    ],
+    [
+     884,
+     620
     ]
    ]
   }

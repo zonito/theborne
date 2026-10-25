@@ -118,7 +118,8 @@
 .hd-ground { fill: var(--hd-ground); }
 .hd-groundline { stroke: var(--hd-slab); stroke-width: 2; }
 .hd-band2 { fill: var(--hd-band2); } .hd-band1 { fill: var(--hd-band1); } .hd-band0 { fill: var(--hd-band0); }
-.hd-garage { fill: var(--hd-band1); stroke: var(--hd-slab); stroke-width: 2.5; }
+.hd-drive { fill: var(--hd-slab); }
+.hd-boundwall { fill: var(--hd-wall); }
 .hd-roof { fill: none; stroke: var(--hd-wall); stroke-linecap: round; }
 .hd-walls { fill: none; stroke: var(--hd-wall); stroke-width: 3; }
 .hd-slab { stroke: var(--hd-slab); stroke-width: 3; }
