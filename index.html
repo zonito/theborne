@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Bourne: how this house works</title>
+<style>
+  :root{
+    --bg:#14100c; --bg2:#1a140f; --panel:#201812; --card:#251b13; --line:#3a2b1e;
+    --text:#f4ead9; --muted:#bfae94; --faint:#8a7a63;
+    --amber:#ffb454; --green:#83d492; --red:#ff8272; --blue:#84c6ff; --grey:#9a8d7a;
+    --gas:#ffb454; --heat:#ff9d6b; --water:#6ec3ff; --elec:#c9a2ff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:radial-gradient(1200px 600px at 50% -100px, #2a1f13 0%, var(--bg) 55%);color:var(--text);
+    font-family:ui-rounded,"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.5;}
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 20px 48px}
+  header .kicker{letter-spacing:.22em;font-size:11px;color:var(--amber);text-transform:uppercase;margin:0 0 6px}
+  h1{font-size:40px;margin:0 0 4px;font-weight:650;letter-spacing:.01em}
+  .sub{color:var(--muted);font-size:17px;margin:0 0 14px;max-width:720px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+  .chip{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;
+    padding:4px 12px;font-size:13px}
+  .chip strong{color:var(--text);font-weight:600}
+  .scenbar{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 12px}
+  .scenbtn{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--text);
+    border-radius:12px;padding:10px 18px;font-size:15px;font-weight:600;font-family:inherit;transition:all .15s}
+  .scenbtn:hover{border-color:var(--amber)}
+  .scenbtn.active{background:var(--amber);color:#241708;border-color:var(--amber)}
+  .explain{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--amber);
+    border-radius:12px;padding:14px 18px;margin-bottom:18px}
+  .explain h2{margin:0 0 6px;font-size:17px}
+  .explain p{margin:4px 0;color:var(--muted);font-size:15px}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+  @media (max-width:960px){.layout{grid-template-columns:1fr}}
+  .diagramcard{background:linear-gradient(180deg,var(--bg2),var(--panel));border:1px solid var(--line);
+    border-radius:16px;padding:10px}
+  .caption{color:var(--muted);font-size:14px;padding:8px 6px 4px}
+  .caption strong{color:var(--text)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;padding:6px;font-size:13px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .swatch{width:22px;height:0;border-top:3px solid;border-radius:2px;display:inline-block}
+  aside.side{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;position:sticky;top:16px}
+  @media (max-width:960px){aside.side{position:static}}
+  aside.side .room{color:var(--faint);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin:0}
+  aside.side h2{margin:2px 0 8px;font-size:22px}
+  .statuschip{display:inline-block;border-radius:999px;padding:3px 11px;font-size:13px;font-weight:600;margin-bottom:12px}
+  .statuschip.working{background:rgba(131,212,146,.15);color:var(--green);border:1px solid rgba(131,212,146,.4)}
+  .statuschip.fault{background:rgba(255,130,114,.13);color:var(--red);border:1px solid rgba(255,130,114,.45)}
+  .statuschip.unchecked{background:rgba(132,198,255,.12);color:var(--blue);border:1px solid rgba(132,198,255,.4)}
+  .statuschip.off{background:rgba(154,141,122,.14);color:var(--grey);border:1px solid rgba(154,141,122,.45)}
+  aside.side h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin:14px 0 4px}
+  aside.side p{margin:0 0 6px;color:var(--muted);font-size:14.5px}
+  aside.side p.detail{color:var(--text);font-size:14px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:10px 12px}
+  .statusboard{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+  @media (max-width:960px){.statusboard{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.statusboard{grid-template-columns:1fr}}
+  .sbgroup{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .sbgroup h3{margin:0 0 8px;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+  .sbgroup.working h3{color:var(--green)} .sbgroup.fault h3{color:var(--red)}
+  .sbgroup.unchecked h3{color:var(--blue)} .sbgroup.off h3{color:var(--grey)}
+  .sbgroup ul{list-style:none;margin:0;padding:0}
+  .sbgroup li{font-size:14px;color:var(--muted);padding:5px 0;border-top:1px dashed var(--line)}
+  .sbgroup li:first-child{border-top:none}
+  .sbgroup li .d{display:block;font-size:12px;color:var(--faint)}
+  .openitems{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-top:18px}
+  .openitems h2{margin:0 0 6px;font-size:19px}
+  .openitems ol{margin:6px 0 0;padding-left:20px}
+  .openitems li{margin:10px 0;color:var(--muted);font-size:15px}
+  .openitems li strong{color:var(--text)}
+  footer{color:var(--faint);font-size:13px;margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+  /* SVG */
+  svg text{font-family:inherit}
+  .floorlabel{fill:var(--faint);font-size:12px;letter-spacing:.18em}
+  .roomlabel{fill:rgba(244,234,217,.34);font-size:12.5px}
+  .flow{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.16}
+  .flow.gas{stroke:var(--gas)} .flow.heat{stroke:var(--heat)} .flow.water{stroke:var(--water)} .flow.elec{stroke:var(--elec)}
+  .flow.on{opacity:.95;stroke-dasharray:2 10;animation:flowmove 1.1s linear infinite}
+  .flow.dim{opacity:.45;stroke-dasharray:2 10;animation:flowmove 2.2s linear infinite}
+  .flow.off{opacity:.13}
+  .flow.stopped{opacity:.4;stroke:var(--red);stroke-dasharray:5 6}
+  @keyframes flowmove{to{stroke-dashoffset:-24}}
+  .comp{cursor:pointer}
+  .comp rect.body{fill:#2b2015;stroke:var(--grey);stroke-width:1.6;transition:all .25s}
+  .comp:hover rect.body{stroke:var(--text)}
+  .comp.sel rect.body{stroke:var(--amber);stroke-width:2.6}
+  .comp .t1{fill:var(--text);font-size:12.5px;font-weight:600;text-anchor:middle;pointer-events:none}
+  .comp .t2{fill:var(--muted);font-size:10.5px;text-anchor:middle;pointer-events:none}
+  .comp .dot{stroke:#14100c;stroke-width:1.6}
+  .comp.s-working .dot,.comp.s-charging .dot{fill:var(--green)}
+  .comp.s-heating .dot{fill:var(--heat)}
+  .comp.s-ok .dot{fill:var(--green)}
+  .comp.s-fault .dot,.comp.s-dead .dot{fill:var(--red)}
+  .comp.s-warn .dot,.comp.s-calling .dot,.comp.s-reheat .dot{fill:var(--amber)}
+  .comp.s-off .dot,.comp.s-idle .dot,.comp.s-cold .dot{fill:var(--grey)}
+  .comp.s-unchecked .dot{fill:none;stroke:var(--blue);stroke-width:2}
+  .comp.s-fault rect.body,.comp.s-dead rect.body{stroke:var(--red)}
+  .comp.s-warn rect.body{stroke:var(--amber)}
+  .comp.s-unchecked rect.body{stroke:var(--blue);stroke-dasharray:5 4}
+  .comp.s-off,.comp.s-idle{opacity:.72}
+  .comp.s-reheat rect.body{stroke:var(--amber);stroke-width:2.4}
+  .comp .pulse{fill:none;stroke:var(--amber);stroke-width:1.6;opacity:0}
+  .comp.s-heating .pulse,.comp.s-reheat .pulse,.comp.s-fault .pulse,.comp.s-dead .pulse{animation:pulse 1.8s ease-out infinite}
+  .comp.s-fault .pulse,.comp.s-dead .pulse{stroke:var(--red)}
+  @keyframes pulse{0%{opacity:.7}100%{opacity:0}}
+  .utilbox{fill:#241a11;stroke:var(--line);rx:8}
+  .utiltext{fill:var(--muted);font-size:11.5px;text-anchor:middle}
+  .utiltext b{fill:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Oak Lodge · House systems, drawn plainly</p>
+    <h1>The Bourne</h1>
+    <p class="sub" id="summary"></p>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <div class="scenbar" id="scenbar"></div>
+  <div class="explain" id="explain"></div>
+
+  <div class="layout">
+    <div class="diagramcard">
+      <svg id="house" viewBox="0 0 1000 760" width="100%" role="img" aria-label="Cross-section diagram of the house and its systems">
+        <!-- architecture -->
+        <rect x="0" y="700" width="1000" height="60" fill="#0d0a07"/>
+        <line x1="0" y1="700" x2="1000" y2="700" stroke="#4a3826" stroke-width="2"/>
+        <!-- house bands -->
+        <rect x="250" y="190" width="540" height="160" fill="#221810"/>
+        <rect x="250" y="350" width="540" height="160" fill="#1d140e"/>
+        <rect x="250" y="510" width="540" height="190" fill="#251a11"/>
+        <!-- roof -->
+        <path d="M238,196 L520,92 L802,196" fill="none" stroke="#5a4630" stroke-width="5" stroke-linecap="round"/>
+        <!-- walls and slabs -->
+        <rect x="250" y="190" width="540" height="510" fill="none" stroke="#5a4630" stroke-width="3"/>
+        <line x1="250" y1="350" x2="790" y2="350" stroke="#4a3826" stroke-width="3"/>
+        <line x1="250" y1="510" x2="790" y2="510" stroke="#4a3826" stroke-width="3"/>
+        <!-- garage -->
+        <rect x="812" y="500" width="168" height="200" fill="#1d150e" stroke="#4a3826" stroke-width="2.5"/>
+        <path d="M804,502 L896,450 L988,502" fill="none" stroke="#5a4630" stroke-width="4" stroke-linecap="round"/>
+        <!-- floor labels -->
+        <text class="floorlabel" x="262" y="212">SECOND FLOOR</text>
+        <text class="floorlabel" x="262" y="372">FIRST FLOOR</text>
+        <text class="floorlabel" x="262" y="532">GROUND FLOOR</text>
+        <text class="floorlabel" x="824" y="524">GARAGE</text>
+        <!-- room labels -->
+        <text class="roomlabel" x="300" y="548">Kitchen cupboard</text>
+        <text class="roomlabel" x="596" y="530">Open-plan living hall</text>
+        <text class="roomlabel" x="700" y="530">Utility</text>
+        <text class="roomlabel" x="398" y="516">Under-stairs cupboard</text>
+        <text class="roomlabel" x="322" y="482">Bedroom</text>
+        <text class="roomlabel" x="452" y="338">Bedroom</text>
+        <!-- utility boxes -->
+        <rect class="utilbox" x="15" y="538" width="110" height="56" rx="8"/>
+        <text class="utiltext" x="70" y="562">Gas supply</text>
+        <text class="utiltext" x="70" y="580">E.ON Next</text>
+        <rect class="utilbox" x="15" y="612" width="110" height="56" rx="8"/>
+        <text class="utiltext" x="70" y="636">Grid</text>
+        <text class="utiltext" x="70" y="654">electricity</text>
+        <g id="flows"></g>
+        <g id="comps"></g>
+      </svg>
+      <div class="caption" id="caption"></div>
+      <div class="legend">
+        <span><i class="swatch" style="border-color:var(--gas)"></i> Gas</span>
+        <span><i class="swatch" style="border-color:var(--heat)"></i> Heating water</span>
+        <span><i class="swatch" style="border-color:var(--water)"></i> Hot water to taps</span>
+        <span><i class="swatch" style="border-color:var(--elec)"></i> Electricity</span>
+        <span>Moving dashes mean energy or water is flowing. Click any box in the house for its story.</span>
+      </div>
+    </div>
+
+    <aside class="side" id="panel"></aside>
+  </div>
+
+  <div class="statusboard" id="statusboard"></div>
+
+  <div class="openitems">
+    <h2>Open items</h2>
+    <ol id="openitems"></ol>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+"use strict";
+const HOUSE = {"components":[{"detail":"Checked on 25 Oct 2026: 70 C flow while charging the cylinder, system pressure 1.9 bar. Healthy pressure range is 0.8 to 3.0 bar.","floor":"Ground floor","how":"The boiler heats water in a sealed circuit and sends it where the controller asks: to the radiators, to the underfloor loops, or through a coil inside the Megaflo cylinder to heat the stored tap water. On its display, a tap symbol means it is heating the water tank; a radiator symbol means it is heating the house.","id":"boiler","label":["Boiler","Vaillant 637"],"name":"Boiler","room":"Kitchen cupboard","status":{"date":"25 Oct 2026","kind":"working","label":"Working"},"w":124,"what":"A Vaillant ecoTEC plus 637 system boiler. It burns gas and makes hot water for the heating system. It is the single heat source for the whole house.","x":350,"y":580},{"detail":"Seen on 25 Oct 2026: room 20.5 C, outside 9.5 C, desired heating temperature 24.0 C, controller clock showing 5:46 at 8:03 real time.","floor":"Upstairs","how":"It runs heating and hot water to a daily timetable stored in its own clock. Hot water modes: Auto follows the timetable, Day keeps the tank hot all the time. Cylinder boost heats the tank once, right away, outside the timetable, then cancels itself. Because its clock runs about 2 hours 16 minutes slow, every timed programme fires late by that much.","id":"ctrl","label":["Controller","VRC 470"],"name":"Heating controller","room":"Wall controller","status":{"date":"25 Oct 2026","kind":"fault","label":"Works, but clock about 2h16 slow"},"w":124,"what":"A Vaillant VRC 470 weather compensator. It is the timetable keeper for heating and hot water, and it adjusts boiler temperature to the weather outside.","x":350,"y":238},{"detail":"On the morning of 25 Oct 2026 three baths drained the tank and the timetable had not fired because of the slow controller clock. Setting hot water to Day started the reheat.","floor":"First floor","how":"Taps draw stored hot water from the tank. The boiler reheats the tank through a coil inside it, only when the controller timetable or a boost asks. Back to back baths can drain the tank; a full reheat takes about 30 to 45 minutes. The tank also has a 3 kW electric immersion heater as backup, switched off since 10 Oct 2026 to save electricity. Standing heat loss is 1.57 kWh per day.","id":"cyl","label":["Megaflo cylinder","210 litres"],"name":"Megaflo cylinder","room":"Airing cupboard (shown here for clarity)","status":{"date":"25 Oct 2026","kind":"working","label":"Working"},"w":124,"what":"A Heatrae Sadia Megaflo Eco unvented cylinder holding 210 litres of hot water. This tank, not the boiler, is what feeds the taps and baths.","x":735,"y":452},{"detail":"This circuit is separate from the underfloor wiring centre, so it kept working during the underfloor power fault.","floor":"First floor","how":"When the controller calls for heat, the boiler sends hot water around this circuit. The chrome towel rail is heated by boiler water, not electricity; its heat is set by the valves at its base.","id":"rads","label":["Radiators +","towel rails"],"name":"Radiators and towel rails","room":"Bedrooms and bathrooms","status":{"date":"25 Oct 2026","kind":"working","label":"Working"},"w":124,"what":"Radiators in the upper floor rooms, plus heated towel rails in the bathrooms. All of them run on hot water from the gas boiler.","x":360,"y":440},{"detail":"Working normally on 25 Oct 2026.","floor":"Second floor","how":"Hot water rises from the boiler through the radiator circuit. The room thermostat for this floor is the VRC 470 controller itself.","id":"rad2","label":["Radiator","top bedroom"],"name":"Top bedroom radiator","room":"Large bedroom","status":{"date":"25 Oct 2026","kind":"working","label":"Working"},"w":124,"what":"The radiator in the large top floor bedroom, fed by the same boiler circuit as the other radiators.","x":480,"y":290},{"detail":"Checked and off. This was one of the hidden electricity users behind the high summer bills.","floor":"Second floor","how":"A heating mat under the floor warms the tiles directly. On 10 Oct 2026 it was found switched on in manual mode, set to 23 C with the floor near 29 C, even though it was thought to be off since May. It was switched fully off the same day.","id":"bath2","label":["Top bathroom","electric floor"],"name":"Top-floor bathroom","room":"Bathroom","status":{"date":"10 Oct 2026","kind":"off","label":"Electric floor off since 10 Oct 2026"},"w":124,"what":"A bathroom with electric underfloor heating under the tiles, controlled by its own Comfort Zone thermostat. It uses electricity, not the boiler.","x":680,"y":275},{"detail":"One of two bathrooms still to check. Checking takes one minute: the thermostat screen should be dark when off.","floor":"First floor","how":"Same system as the top floor bathroom: an electric mat under the tiles. Until its thermostat is checked, nobody knows whether it is off, timed, or quietly running like the top floor one was.","id":"bathF","label":["Family bathroom","electric floor"],"name":"Family bathroom","room":"Family bathroom","status":{"date":"Still open, 25 Oct 2026","kind":"unchecked","label":"Not yet checked"},"w":124,"what":"The first floor family bathroom, with electric underfloor heating and its own Comfort Zone thermostat.","x":520,"y":400},{"detail":"One of two bathrooms still to check, alongside the family bathroom.","floor":"First floor","how":"An electric mat under the tiles, independent of the boiler. Its state is unknown until someone looks at its thermostat.","id":"bathE","label":["En-suite","electric floor"],"name":"En-suite bathroom","room":"En-suite bathroom","status":{"date":"Still open, 25 Oct 2026","kind":"unchecked","label":"Not yet checked"},"w":124,"what":"The en-suite bathroom, also with electric underfloor heating on its own thermostat.","x":650,"y":400},{"detail":"There are two consumer units in the cupboard. Both were fully on during the underfloor investigation.","floor":"Ground floor","how":"Labels include Sockets Under Stairs, Boiler, Cylinder, and the ring circuits for each floor. On 24 Oct 2026 every breaker was photographed on, which proved the underfloor fault was not a tripped breaker.","id":"consumer","label":["Consumer unit","fuse box"],"name":"Consumer unit","room":"Under-stairs cupboard","status":{"date":"24 Oct 2026","kind":"working","label":"All breakers on"},"w":124,"what":"The house fuse box. Every circuit in the house takes its power through here, each with its own breaker switch.","x":300,"y":640},{"detail":"Fault state on 24 Oct 2026: POWER light dark, every zone light dark, the Drayton LP711 timer beside it also blank, while every consumer unit breaker was on. Fix is an electrician visit.","floor":"Ground floor","how":"When a thermostat calls for heat, this box powers open that zone's actuator valve, starts the manifold pump and asks the boiler for heat. Its valves are normally shut, so with no power nothing can flow. Its board fuse is a 5 amp anti-surge 20 mm glass fuse, currently stuck fast in its clips. The Zone 4 pump control switch was found set to NO and was moved to YES on 24 Oct 2026, which is correct for underfloor heating, but the box still has no power.","id":"wiring","label":["Wiring centre","Polypipe UFH4ZW"],"name":"Underfloor wiring centre","room":"Under-stairs cupboard","status":{"date":"Found 24 Oct 2026","kind":"fault","label":"No power"},"w":124,"what":"A Polypipe UFH4ZW wiring centre. It is the brain of the ground floor underfloor heating: it listens to the room thermostats and opens the valves on the manifold.","x":430,"y":648},{"detail":"Pump green light on, flow gauges near zero on all four loops, 24 Oct 2026.","floor":"Ground floor","how":"The pump pushes warm water around the loops under the floor. The mixing valve blends the water down to a gentle floor temperature. Each loop has a flow gauge and a valve motor (actuator) opened by the wiring centre. Loop 2 has a plain manual cap instead of a motor, so it has no automatic control. With the wiring centre dead, the pump runs but the valves stay shut and all four gauges read near zero.","id":"manifold","label":["UFH manifold","pump + 4 loops"],"name":"Underfloor manifold and pump","room":"Under-stairs cupboard","status":{"date":"Found 24 Oct 2026","kind":"fault","label":"Pump runs, no flow"},"w":124,"what":"The pipe hub for the floor heating: two brass bars, four floor loops, a Grundfos UPS2 25-40/60 pump, a thermostatic mixing valve and four flow gauges.","x":520,"y":605},{"detail":"The lobby target was raised to 20 C by hand on 24 Oct 2026 while family are staying.","floor":"Ground floor","how":"Each thermostat watches its zone and asks the wiring centre for heat when the room is below target. On 24 Oct 2026 the living hall sat at 18 C against targets above 20 C, calling correctly, but the dead wiring centre could not act on the calls.","id":"stats","label":["Thermostats x3","lobby, hall x2"],"name":"Underfloor thermostats","room":"Entry lobby and living hall","status":{"date":"24 Oct 2026","kind":"working","label":"Working, but their calls go nowhere"},"w":124,"what":"Three Polypipe room thermostats for the floor zones: one in the entry lobby and two in the living hall, one for each half of the big room.","x":520,"y":548},{"detail":"This is the visible symptom of the wiring centre power fault, not a fault in the floor itself.","floor":"Ground floor","how":"Warm water flowing through the loops turns the whole floor into a slow, gentle radiator. A working loop feels warm underfoot. Right now no water can enter the loops because the manifold valves are held shut by the dead wiring centre, so the floor stays cold and the living hall stalls near 20 C.","id":"loops","label":["Floor loops x4","lobby + living hall"],"name":"Floor loops","room":"Under the ground floor","status":{"date":"Found 24 Oct 2026","kind":"fault","label":"Cold, no water flowing"},"w":150,"what":"Four loops of pipe buried in the ground floor screed: one for the entry lobby and the rest across the open-plan living hall.","x":620,"y":672},{"detail":"Same electrician visit as the wiring centre. The manual is saved in Drive under Household, Manuals.","floor":"Ground floor","how":"It is faulty: it powers up, runs for 3 to 4 minutes, then goes completely dark. The likely cause is a plug, fuse or connection failing as it warms under load, or an overheat cut-out tripping. It uses almost no electricity in this state (about 0.2 kWh per short run), so it is not a bill problem. It is left switched off at the wall; restarting it repeatedly is not safe.","id":"dimplex","label":["Dimplex Quantum","storage heater"],"name":"Dimplex Quantum storage heater","room":"Utility room","status":{"date":"Found 24 Oct 2026","kind":"fault","label":"Cuts out after 3 to 4 minutes"},"w":124,"what":"A Dimplex Quantum electric storage heater on the utility room wall. It stores heat in bricks and releases it through the day.","x":728,"y":556},{"detail":"No action needed.","floor":"Ground floor","how":"It heats water only while that tap runs, so it is a small, occasional load. It is not connected to the main hot water system.","id":"sink","label":["Instant heater","utility sink"],"name":"Instant water heater","room":"Utility room, under the sink","status":{"date":"Oct 2026","kind":"working","label":"Working, minor load"},"w":110,"what":"A small instant electric water heater under the utility room sink.","x":715,"y":620},{"detail":"The display history is now the easiest way to watch the house: a normal day without car charging lands near 12 to 15 kWh of electricity.","floor":"Ground floor","how":"Tariffs shown on the display: electricity 26.613p per kWh plus 51.83p per day; gas 7.91p per kWh plus 29.33p per day. From 1 to 24 Oct 2026 the house used 367 kWh of electricity (about 15.3 kWh a day) and 467 kWh of gas (about 19.5 kWh a day). Every cost screen on the display reconciles exactly with these tariffs.","id":"meters","label":["Smart meters","E.ON + IHD"],"name":"Smart meters and display","room":"Meter boxes and the SmartView 3 display","status":{"date":"24 Oct 2026","kind":"working","label":"Working"},"w":150,"what":"Smart meters for gas and electricity, fitted around the end of September 2026, with a SmartView 3 in-home display that shows live use, daily history and costs.","x":128,"y":470},{"detail":"The car covers about 3,000 miles a year, so charging is occasional, not daily.","floor":"Ground floor","how":"It takes power from the grid through the consumer unit and charges the car at home. A charging session adds roughly 10 to 20 kWh to the day's electricity, which is why some days look high on the meter display.","id":"wallbox","label":["Wall Connector","Tesla"],"name":"Tesla Wall Connector","room":"Garage","status":{"date":"Oct 2026","kind":"working","label":"Working"},"w":124,"what":"The Tesla Wall Connector in the garage, the home charger for the car.","x":895,"y":556},{"detail":"Charging days are the main reason daily electricity swings between about 13 and 22 kWh.","floor":"Ground floor","how":"Charged at home from the Wall Connector. In the energy picture it is the single biggest occasional load in the house.","id":"car","label":["Tesla Model Y",""],"name":"Tesla Model Y","room":"Garage","status":{"date":"Oct 2026","kind":"working","label":"Working"},"w":124,"what":"A Tesla Model Y Long Range, rear wheel drive, leased.","x":895,"y":650}],"floors":[{"id":"floor2","name":"Second floor","rooms":"One large bedroom with terrace, one bathroom"},{"id":"floor1","name":"First floor","rooms":"Two bedrooms, family bathroom, en-suite bathroom"},{"id":"floor0","name":"Ground floor","rooms":"Entry lobby, open-plan kitchen, dining and living hall, utility room, garage"}],"flows":[{"id":"gas-in","kind":"gas","label":"Gas to boiler","points":[[118,566],[200,566],[200,586],[286,586]]},{"id":"heat-rads","kind":"heat","label":"Boiler to radiators","points":[[330,556],[318,468],[332,444],[318,444],[318,294],[414,292]]},{"id":"heat-coil","kind":"heat","label":"Boiler to cylinder coil","points":[[412,578],[560,578],[560,468],[668,460]]},{"id":"water-taps","kind":"water","label":"Tank to top bathroom","points":[[742,428],[700,332],[686,300]]},{"id":"water-taps-1f","kind":"water","label":"Tank to first floor taps","points":[[706,430],[672,422]]},{"id":"heat-manifold","kind":"heat","label":"Boiler to manifold","points":[[412,596],[452,604]]},{"id":"heat-loops","kind":"heat","label":"Manifold to floor loops","points":[[566,624],[596,650],[604,654]]},{"id":"elec-main","kind":"elec","label":"Grid to consumer unit","points":[[128,640],[234,640]]},{"id":"elec-immersion","kind":"elec","label":"Immersion feed (off)","points":[[330,618],[330,520],[520,520],[520,484],[666,474]]},{"id":"elec-bath-top","kind":"elec","label":"Top bathroom floor feed","points":[[298,618],[276,618],[276,272],[612,272]]},{"id":"elec-bath-1f","kind":"elec","label":"First floor bathroom feeds","points":[[276,398],[452,398]]},{"id":"elec-dimplex","kind":"elec","label":"Storage heater feed","points":[[362,654],[786,654],[786,580]]},{"id":"elec-sink","kind":"elec","label":"Instant heater feed","points":[[786,640],[774,626]]},{"id":"elec-ev","kind":"elec","label":"Car charger feed","points":[[72,672],[72,694],[884,694],[884,600],[892,580]]}],"meta":{"facts":["Detached house","Built 2014","179 m2","3 floors","Energy: E.ON Next"],"house":"Oak Lodge, 2B The Bourne, London N14 6QX","name":"The Bourne","note":"This file is the source of truth. The web page renders from a copy of this model. Edit this file first, then refresh the copy inside index.html.","summary":"How this house works: heating, hot water and power, drawn as one picture.","verified":"Facts checked at the house on 24 and 25 October 2026."},"openItems":[{"detail":"One visit covers both faults. Estimate: 100 to 200 pounds on a weekday; worst case about 500 pounds on a Saturday if the wiring centre board itself needs replacing.","title":"Electrician visit: wiring centre power and the Dimplex"},{"detail":"The VRC 470 clock runs about 2 hours 16 minutes slow, so every timed programme, including hot water, fires late.","title":"Fix the controller clock"},{"detail":"Family bathroom and en-suite. One minute each: the screen should be dark if the floor is truly off.","title":"Check the two first floor bathroom floor thermostats"},{"detail":"Hot water was set to Day on 25 Oct 2026 to recover after the baths. Once the tank is hot and baths are done, Auto saves gas.","title":"Set hot water back to Auto"}],"scenarios":[{"caption":"Floor: warm · Tank: hot · Radiators: on · Car: charging","components":{"bath2":"off","bathE":"unchecked","bathF":"unchecked","boiler":"working","car":"charging","consumer":"ok","ctrl":"ok","cyl":"ok","dimplex":"fault","loops":"heating","manifold":"working","meters":"ok","rad2":"heating","rads":"heating","sink":"idle","stats":"ok","wallbox":"charging","wiring":"ok"},"explanation":["A normal day. The boiler heats the house and keeps the tank hot on the controller timetable.","Warm water runs through the floor loops and the radiators. The car charges when it is plugged in, which is the main reason some days use more electricity.","Even on a normal day, two things stay as they are until fixed: the Dimplex is faulty and off, and the two first floor bathroom floors are still unchecked."],"flows":{"elec-bath-1f":"dim","elec-bath-top":"off","elec-dimplex":"stopped","elec-ev":"on","elec-immersion":"off","elec-main":"on","elec-sink":"dim","gas-in":"on","heat-coil":"on","heat-loops":"on","heat-manifold":"on","heat-rads":"on","water-taps":"on","water-taps-1f":"on"},"id":"normal","name":"Normal day"},{"caption":"Tank: drained, then reheating · Boiler: busy with the tank · Floor: warm","components":{"bath2":"off","bathE":"unchecked","bathF":"unchecked","boiler":"heating","car":"idle","consumer":"ok","ctrl":"ok","cyl":"reheat","dimplex":"fault","loops":"heating","manifold":"working","meters":"ok","rad2":"idle","rads":"idle","sink":"idle","stats":"ok","wallbox":"idle","wiring":"ok"},"explanation":["Three baths back to back drain the 210 litre tank, because taps use stored water, not instant heat from the boiler. This is normal, not a breakdown.","Cylinder boost then points the boiler at the tank alone until it is hot again: about 30 to 45 minutes for a full reheat. House heating pauses while the tank charges.","The immersion heater could reheat the tank with electricity instead, but it stays off to save money."],"flows":{"elec-bath-1f":"dim","elec-bath-top":"off","elec-dimplex":"stopped","elec-ev":"off","elec-immersion":"off","elec-main":"on","elec-sink":"dim","gas-in":"on","heat-coil":"on","heat-loops":"on","heat-manifold":"on","heat-rads":"dim","water-taps":"on","water-taps-1f":"on"},"id":"baths","name":"Morning baths"},{"caption":"Floor: cold · Tank: hot · Radiators: on · Controller clock: slow","components":{"bath2":"off","bathE":"unchecked","bathF":"unchecked","boiler":"working","car":"idle","consumer":"ok","ctrl":"warn","cyl":"ok","dimplex":"fault","loops":"cold","manifold":"idle","meters":"ok","rad2":"heating","rads":"heating","sink":"idle","stats":"calling","wallbox":"idle","wiring":"dead"},"explanation":["Today, 25 October 2026: the underfloor wiring centre has no power, so its valves stay shut, no water enters the floor loops, and the living hall stalls near 20 C with a cold floor.","The boiler, radiators and hot water run on a separate path and are unaffected. The manifold pump still runs, but it only stirs water inside the manifold.","Separately, the controller clock runs about 2 hours 16 minutes slow, which is why the hot water timetable fired late this morning and the tank ran cold after the baths."],"flows":{"elec-bath-1f":"dim","elec-bath-top":"off","elec-dimplex":"stopped","elec-ev":"off","elec-immersion":"off","elec-main":"on","elec-sink":"dim","gas-in":"on","heat-coil":"on","heat-loops":"stopped","heat-manifold":"stopped","heat-rads":"on","water-taps":"on","water-taps-1f":"on"},"id":"today","name":"Today: UFH fault"}],"statusBoard":[{"group":"Working","items":[{"date":"25 Oct 2026","label":"Boiler (70 C, 1.9 bar)"},{"date":"25 Oct 2026","label":"Radiators and towel rails"},{"date":"25 Oct 2026","label":"Hot water, after boost"},{"date":"24 Oct 2026","label":"Smart meters and display"},{"date":"Oct 2026","label":"Tesla Wall Connector"}],"kind":"working"},{"group":"Faulty","items":[{"date":"24 Oct 2026","label":"Underfloor wiring centre: no power"},{"date":"24 Oct 2026","label":"Dimplex Quantum: cuts out in minutes"},{"date":"25 Oct 2026","label":"Controller clock: about 2h16 slow"}],"kind":"fault"},{"group":"Unchecked","items":[{"date":"Open","label":"Family bathroom electric floor"},{"date":"Open","label":"En-suite bathroom electric floor"}],"kind":"unchecked"},{"group":"Off on purpose","items":[{"date":"Off since 10 Oct 2026","label":"Top bathroom electric floor"},{"date":"Off since 10 Oct 2026","label":"Immersion heater"}],"kind":"off"}]};
+const $ = (s)=>document.querySelector(s);
+const NS = "http://www.w3.org/2000/svg";
+const compsById = Object.fromEntries(HOUSE.components.map(c=>[c.id,c]));
+let scenario = HOUSE.scenarios.find(s=>s.id==="today") || HOUSE.scenarios[0];
+let selected = "wiring";
+
+/* header */
+$("#summary").textContent = HOUSE.meta.summary + " " + HOUSE.meta.house + ".";
+$("#chips").innerHTML = HOUSE.meta.facts.map(f=>`<span class="chip">${f}</span>`).join("");
+$("#footer").textContent = HOUSE.meta.note + " " + HOUSE.meta.verified;
+
+/* flows */
+const flowsG = $("#flows");
+for (const f of HOUSE.flows){
+  const p = document.createElementNS(NS,"path");
+  p.setAttribute("d", "M" + f.points.map(pt=>pt.join(",")).join(" L"));
+  p.setAttribute("class","flow "+f.kind);
+  p.id = "flow-"+f.id;
+  p.innerHTML = `<title>${f.label}</title>`;
+  flowsG.appendChild(p);
+}
+
+/* components */
+const compsG = $("#comps");
+for (const c of HOUSE.components){
+  const g = document.createElementNS(NS,"g");
+  g.setAttribute("class","comp"); g.id = "comp-"+c.id;
+  const w = c.w||124, h = 44, x = c.x-w/2, y = c.y-h/2;
+  g.innerHTML =
+    `<rect class="pulse" x="${x-5}" y="${y-5}" width="${w+10}" height="${h+10}" rx="13"></rect>`+
+    `<rect class="body" x="${x}" y="${y}" width="${w}" height="${h}" rx="10"></rect>`+
+    `<text class="t1" x="${c.x}" y="${c.y-1}">${c.label[0]}</text>`+
+    `<text class="t2" x="${c.x}" y="${c.y+15}">${c.label[1]||""}</text>`+
+    `<circle class="dot" cx="${x+w-11}" cy="${y+11}" r="5.5"></circle>`;
+  g.addEventListener("click", ()=>select(c.id));
+  compsG.appendChild(g);
+}
+
+/* scenario buttons */
+const scenbar = $("#scenbar");
+for (const s of HOUSE.scenarios){
+  const b = document.createElement("button");
+  b.className = "scenbtn"; b.textContent = s.name; b.dataset.id = s.id;
+  b.addEventListener("click", ()=>applyScenario(s.id));
+  scenbar.appendChild(b);
+}
+
+function applyScenario(id){
+  scenario = HOUSE.scenarios.find(s=>s.id===id);
+  document.querySelectorAll(".scenbtn").forEach(b=>b.classList.toggle("active", b.dataset.id===id));
+  for (const c of HOUSE.components){
+    const el = document.getElementById("comp-"+c.id);
+    el.setAttribute("class","comp s-"+scenario.components[c.id] + (c.id===selected?" sel":""));
+  }
+  for (const f of HOUSE.flows){
+    const el = document.getElementById("flow-"+f.id);
+    el.setAttribute("class","flow "+f.kind+" "+scenario.flows[f.id]);
+  }
+  $("#explain").innerHTML = `<h2>${scenario.name}</h2>` + scenario.explanation.map(p=>`<p>${p}</p>`).join("");
+  $("#caption").innerHTML = "<strong>Right now:</strong> " + scenario.caption;
+}
+
+/* side panel */
+function select(id){
+  selected = id;
+  const c = compsById[id];
+  document.querySelectorAll(".comp").forEach(el=>el.classList.remove("sel"));
+  document.getElementById("comp-"+id).classList.add("sel");
+  $("#panel").innerHTML =
+    `<p class="room">${c.floor} · ${c.room}</p>`+
+    `<h2>${c.name}</h2>`+
+    `<span class="statuschip ${c.status.kind}">${c.status.label} · ${c.status.date}</span>`+
+    `<h3>What it is</h3><p>${c.what}</p>`+
+    `<h3>How it works</h3><p>${c.how}</p>`+
+    `<h3>Checked at the house</h3><p class="detail">${c.detail}</p>`;
+}
+
+/* status board */
+$("#statusboard").innerHTML = HOUSE.statusBoard.map(g=>
+  `<div class="sbgroup ${g.kind}"><h3>${g.group}</h3><ul>`+
+  g.items.map(i=>`<li>${i.label}<span class="d">${i.date}</span></li>`).join("")+
+  `</ul></div>`).join("");
+
+/* open items */
+$("#openitems").innerHTML = HOUSE.openItems.map(o=>
+  `<li><strong>${o.title}.</strong> ${o.detail}</li>`).join("");
+
+applyScenario(scenario.id);
+select(selected);
+</script>
+</body>
+</html>
