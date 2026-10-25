@@ -894,6 +894,10 @@
   {
    "detail": "The controller's two circuits were renamed RADIATORS (was HEATING 1) and UNDERFLOOR (was HEATING 2) by Zonito on 25 Oct 2026, on the strength of the analysis that the first serves the radiators and the second the underfloor heating, and confirmed set and saved at the controller; the installer-screen confirmation is now optional. The menus also include a hot water Circulation programme (Monday as found on 25 Oct 2026: 05:00 to 11:30, 12:30 to 16:30 and 18:00 to 23:00, left unchanged); whether a circulation pump is actually fitted is unverified.",
    "title": "For the engineer: is there a circulation pump fitted?"
+  },
+  {
+   "detail": "Two cupboard switch points do nothing today and Zonito wants both repurposed in future: the video distribution point (the family watches TV over the internet, so the aerial feed to the TV points is unused) and the alarm point (the empty shell of the previous owners' system; the working ADT alarm is wireless). Before any reuse, the electrician confirms what each point is actually wired to and its fuse rating. A task sits on the Family list in Google Tasks.",
+   "title": "Future idea: repurpose the unused video and alarm points"
   }
  ],
  "scenarios": [
