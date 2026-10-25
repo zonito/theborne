@@ -1,20 +1,86 @@
 # The Bourne
 
-A static, animated explainer of how one house works: Oak Lodge, 2B The Bourne, London N14 6QX.
+How the house at Oak Lodge, 2B The Bourne works: heating, hot water and power — the state of every system, the open faults, and the next steps, on one page.
 
-Open `index.html` in any browser. There is no build step and no server-side code. The page draws a cross-section of the house, animates the flows of gas, heating water, hot water and electricity, and lets you switch between three scenarios (a normal day, a morning of back to back baths, and the house as it is today with the underfloor heating fault). Clicking any component explains, in plain words, what it is, how it works, and its current checked status.
+Built with [TanStack Start](https://tanstack.com/start/latest) (React 19, TanStack Router, TanStack Query), Tailwind CSS v4, and Radix UI components.
 
-## Model first
+## Prerequisites
 
-`data/house.json` is the source of truth, in the same spirit as Yantra: floors, systems, components, states, flows and scenarios all live in the model.
+- **Node.js** 18+ (ESM)
+- **npm**
 
-Rule: edit `data/house.json` first, then refresh the copy of the model embedded in `index.html` (the `const HOUSE = ...` block) so the page stays in sync. The page renders everything (components, flows, scenario states, the status board and the open items list) from that model, so a model change is the only change needed when the house changes: a fault fixed, a tariff updated, a new check done.
+## Installation
 
-## Files
+```bash
+git clone <repo-url> theborne
+cd theborne
+npm install
+```
 
-- `index.html` — the whole app: markup, styles, script and an embedded copy of the model.
-- `data/house.json` — the model, kept separately for clean editing and diffs.
+## Run locally
 
-## Facts
+```bash
+npm run dev
+```
 
-Every fact on the page was verified at the house on 24 and 25 October 2026 (boiler readings, meter display figures, the wiring centre investigation, the cylinder and controller behaviour). If a fact cannot be verified, it does not go in the model.
+Opens at `http://localhost:3000` (or the next available port).
+
+## Build
+
+```bash
+npm run build        # production build (Nitro, into .output/)
+npm run build:dev    # development build
+npm run preview      # preview the production build
+```
+
+## Lint & format
+
+```bash
+npm run lint
+npm run format
+```
+
+## Test
+
+```bash
+npm test             # vitest run: house data rules + app routing
+npm run test:watch   # watch mode
+```
+
+## Project structure
+
+```
+src/
+├── routes/              # file-based routing (TanStack Router)
+│   ├── __root.tsx       # app shell / layout, error and 404 components
+│   └── index.tsx        # the house page (status board, diagram, components)
+├── components/
+│   ├── HouseDiagram.tsx # animated SVG diagram of the house systems
+│   └── ui/              # shadcn/ui components (Radix-based)
+├── data/
+│   └── house.json       # every house fact: systems, components, scenarios
+├── lib/
+│   ├── house.ts         # typed access to house.json (status tones, helpers)
+│   ├── error-capture.ts # server error capture for the SSR error wrapper
+│   ├── error-page.ts    # static fallback error page
+│   └── utils.ts         # class-name helper
+├── hooks/
+│   └── use-mobile.tsx   # viewport hook
+├── test/
+│   ├── app-routing.test.tsx
+│   └── setup.ts
+├── server.ts            # SSR entry (wraps the Start handler, renders error page on 500s)
+├── start.ts             # Start instance: error + CSRF middleware
+├── router.tsx           # router setup
+└── styles.css           # Tailwind + design system
+```
+
+## Notes
+
+- **House facts live only in `src/data/house.json`.** The app renders from that
+  model; components never hard-code facts. Facts are verified against house
+  documents, photos and manufacturer manuals before they go in. To update the
+  app, update the JSON.
+- The three scenarios in the data (a normal day, a cold morning, today) drive
+  the diagram and the status board from the same component states, so the page
+  can never contradict itself.
