@@ -5,90 +5,184 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Bourne: how this house works</title>
 <style>
+  /* ===== Theme tokens ===== */
   :root{
-    --bg:#14100c; --bg2:#1a140f; --panel:#201812; --card:#251b13; --line:#3a2b1e;
+    color-scheme:light;
+    --bg:#f6efe2; --bg-glow:#fdf6e3; --panel:#fffcf4; --panel2:#faf2e0; --card:#fffaf0;
+    --line:#e3d3b8; --line-strong:#cdb488;
+    --text:#33251a; --muted:#77644c; --faint:#a68f6f;
+    --accent:#c2692e; --accent-ink:#fff8ee; --amber:#d9903f;
+    --green:#2f7d46; --red:#c0452c; --blue:#2f6fb2; --grey:#857257;
+    --gas:#cf7a12; --heat:#dd5f36; --water:#2e7cc4; --elec:#7a4fc4; --stopped:#c0452c;
+    --tile:#fffaf0; --dotring:#f6efe2;
+    --band2:#f4e8d2; --band1:#efe0c6; --band0:#f1e3ca; --garage:#ebdfc6;
+    --ground:#e3d3b2; --groundline:#b89a68; --wall:#a07c4f; --slab:#bfa06e;
+    --roomlabel:rgba(51,37,26,.34); --floorlabel:#a68f6f;
+    --win:#cfdde0; --winlit:#ffc46b; --warm-o:.13;
+    --seg-bg:#eee1c6;
+    --shadow:0 10px 30px rgba(94,64,28,.10), 0 2px 6px rgba(94,64,28,.06);
+    --shadow-sm:0 3px 10px rgba(94,64,28,.10);
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#16120d; --bg-glow:#251b10; --panel:#211a12; --panel2:#1b150e; --card:#261d13;
+    --line:#3a2c1d; --line-strong:#54402a;
     --text:#f4ead9; --muted:#bfae94; --faint:#8a7a63;
-    --amber:#ffb454; --green:#83d492; --red:#ff8272; --blue:#84c6ff; --grey:#9a8d7a;
-    --gas:#ffb454; --heat:#ff9d6b; --water:#6ec3ff; --elec:#c9a2ff;
+    --accent:#e8a558; --accent-ink:#26180a; --amber:#f0b45a;
+    --green:#83d492; --red:#ff8272; --blue:#84c6ff; --grey:#9a8d7a;
+    --gas:#ffb454; --heat:#ff9d6b; --water:#6ec3ff; --elec:#c9a2ff; --stopped:#ff8272;
+    --tile:#2c2114; --dotring:#16120d;
+    --band2:#251b10; --band1:#211710; --band0:#281d11; --garage:#1e160d;
+    --ground:#0e0a05; --groundline:#4a3826; --wall:#6f573a; --slab:#4a3826;
+    --roomlabel:rgba(244,234,217,.30); --floorlabel:#8a7a63;
+    --win:#2c3640; --winlit:#ffcf7d; --warm-o:.17;
+    --seg-bg:#171208;
+    --shadow:0 12px 32px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.35);
+    --shadow-sm:0 3px 10px rgba(0,0,0,.4);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --bg:#16120d; --bg-glow:#251b10; --panel:#211a12; --panel2:#1b150e; --card:#261d13;
+      --line:#3a2c1d; --line-strong:#54402a;
+      --text:#f4ead9; --muted:#bfae94; --faint:#8a7a63;
+      --accent:#e8a558; --accent-ink:#26180a; --amber:#f0b45a;
+      --green:#83d492; --red:#ff8272; --blue:#84c6ff; --grey:#9a8d7a;
+      --gas:#ffb454; --heat:#ff9d6b; --water:#6ec3ff; --elec:#c9a2ff; --stopped:#ff8272;
+      --tile:#2c2114; --dotring:#16120d;
+      --band2:#251b10; --band1:#211710; --band0:#281d11; --garage:#1e160d;
+      --ground:#0e0a05; --groundline:#4a3826; --wall:#6f573a; --slab:#4a3826;
+      --roomlabel:rgba(244,234,217,.30); --floorlabel:#8a7a63;
+      --win:#2c3640; --winlit:#ffcf7d; --warm-o:.17;
+      --seg-bg:#171208;
+      --shadow:0 12px 32px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.35);
+      --shadow-sm:0 3px 10px rgba(0,0,0,.4);
+    }
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{background:radial-gradient(1200px 600px at 50% -100px, #2a1f13 0%, var(--bg) 55%);color:var(--text);
-    font-family:ui-rounded,"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.5;}
-  .wrap{max-width:1240px;margin:0 auto;padding:28px 20px 48px}
-  header .kicker{letter-spacing:.22em;font-size:11px;color:var(--amber);text-transform:uppercase;margin:0 0 6px}
-  h1{font-size:40px;margin:0 0 4px;font-weight:650;letter-spacing:.01em}
-  .sub{color:var(--muted);font-size:17px;margin:0 0 14px;max-width:720px}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
-  .chip{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;
+  body{background:radial-gradient(1150px 640px at 50% -120px, var(--bg-glow) 0%, var(--bg) 62%);
+    color:var(--text);
+    font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.5;min-height:100vh}
+  body, .diagramcard, aside.side, .sbgroup, .openitems, .explain, .chip, .themetoggle{
+    transition:background-color .45s ease, border-color .45s ease, color .45s ease}
+  .wrap{max-width:1240px;margin:0 auto;padding:30px 20px 52px}
+  /* ===== Header ===== */
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .brand{display:flex;gap:14px;align-items:flex-start}
+  .brandmark{width:40px;height:40px;flex:none;color:var(--accent);margin-top:4px}
+  .kicker{letter-spacing:.22em;font-size:11px;color:var(--accent);text-transform:uppercase;margin:2px 0 4px;font-weight:700}
+  h1{font-family:ui-serif,Georgia,"Times New Roman",serif;font-size:42px;line-height:1.05;
+    margin:0;font-weight:600;letter-spacing:.01em}
+  .sub{color:var(--muted);font-size:16.5px;margin:12px 0 12px;max-width:720px}
+  .themetoggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:inherit;
+    border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;
+    padding:8px 14px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow-sm)}
+  .themetoggle:hover{transform:translateY(-1px);border-color:var(--accent)}
+  .themetoggle svg{width:17px;height:17px;flex:none}
+  .ic-sun{display:block}.ic-moon{display:none}
+  :root[data-theme="dark"] .ic-sun{display:none}
+  :root[data-theme="dark"] .ic-moon{display:block}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .ic-sun{display:none}
+    :root:not([data-theme="light"]) .ic-moon{display:block}
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+  .chip{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:999px;
     padding:4px 12px;font-size:13px}
   .chip strong{color:var(--text);font-weight:600}
-  .scenbar{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 12px}
-  .scenbtn{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--text);
-    border-radius:12px;padding:10px 18px;font-size:15px;font-weight:600;font-family:inherit;transition:all .15s}
-  .scenbtn:hover{border-color:var(--amber)}
-  .scenbtn.active{background:var(--amber);color:#241708;border-color:var(--amber)}
-  .explain{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--amber);
-    border-radius:12px;padding:14px 18px;margin-bottom:18px}
-  .explain h2{margin:0 0 6px;font-size:17px}
+  /* ===== Scenario segmented control ===== */
+  .scenbar{display:inline-flex;gap:2px;background:var(--seg-bg);border:1px solid var(--line);
+    border-radius:999px;padding:4px;margin:22px 0 14px;max-width:100%;overflow-x:auto}
+  .scenbtn{cursor:pointer;border:1px solid transparent;background:transparent;color:var(--muted);
+    border-radius:999px;padding:8px 18px;font-size:14.5px;font-weight:600;font-family:inherit;
+    white-space:nowrap;transition:all .2s}
+  .scenbtn:hover{color:var(--text)}
+  .scenbtn.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);
+    box-shadow:0 2px 8px rgba(0,0,0,.18)}
+  .explain{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:14px;padding:15px 19px;margin-bottom:18px;box-shadow:var(--shadow-sm)}
+  .explain h2{margin:0 0 6px;font-size:17px;font-family:ui-serif,Georgia,serif}
   .explain p{margin:4px 0;color:var(--muted);font-size:15px}
-  .layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+  .explain.flash{animation:fadeUp .5s ease}
+  @keyframes fadeUp{from{opacity:.2;transform:translateY(5px)}to{opacity:1;transform:none}}
+  /* ===== Layout cards ===== */
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 332px;gap:18px;align-items:start}
   @media (max-width:960px){.layout{grid-template-columns:1fr}}
-  .diagramcard{background:linear-gradient(180deg,var(--bg2),var(--panel));border:1px solid var(--line);
-    border-radius:16px;padding:10px}
-  .caption{color:var(--muted);font-size:14px;padding:8px 6px 4px}
+  .diagramcard{background:var(--panel);border:1px solid var(--line);
+    border-radius:18px;padding:12px;box-shadow:var(--shadow)}
+  svg#house{display:block;border-radius:12px}
+  .caption{color:var(--muted);font-size:14px;padding:10px 6px 4px}
   .caption strong{color:var(--text)}
   .legend{display:flex;flex-wrap:wrap;gap:14px;padding:6px;font-size:13px;color:var(--muted)}
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .swatch{width:22px;height:0;border-top:3px solid;border-radius:2px;display:inline-block}
-  aside.side{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;position:sticky;top:16px}
+  aside.side{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:19px;
+    position:sticky;top:16px;box-shadow:var(--shadow)}
   @media (max-width:960px){aside.side{position:static}}
   aside.side .room{color:var(--faint);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin:0}
-  aside.side h2{margin:2px 0 8px;font-size:22px}
+  aside.side h2{margin:2px 0 8px;font-size:22px;font-family:ui-serif,Georgia,serif;font-weight:600}
   .statuschip{display:inline-block;border-radius:999px;padding:3px 11px;font-size:13px;font-weight:600;margin-bottom:12px}
-  .statuschip.working{background:rgba(131,212,146,.15);color:var(--green);border:1px solid rgba(131,212,146,.4)}
-  .statuschip.fault{background:rgba(255,130,114,.13);color:var(--red);border:1px solid rgba(255,130,114,.45)}
-  .statuschip.unchecked{background:rgba(132,198,255,.12);color:var(--blue);border:1px solid rgba(132,198,255,.4)}
-  .statuschip.off{background:rgba(154,141,122,.14);color:var(--grey);border:1px solid rgba(154,141,122,.45)}
-  aside.side h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin:14px 0 4px}
+  .statuschip.working{background:rgba(131,212,146,.16);color:var(--green);border:1px solid var(--green)}
+  .statuschip.fault{background:rgba(255,130,114,.13);color:var(--red);border:1px solid var(--red)}
+  .statuschip.unchecked{background:rgba(132,198,255,.13);color:var(--blue);border:1px solid var(--blue)}
+  .statuschip.off{background:rgba(154,141,122,.15);color:var(--grey);border:1px solid var(--grey)}
+  aside.side h3{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:15px 0 4px}
   aside.side p{margin:0 0 6px;color:var(--muted);font-size:14.5px}
   aside.side p.detail{color:var(--text);font-size:14px;background:var(--card);border:1px solid var(--line);
     border-radius:10px;padding:10px 12px}
   .statusboard{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
   @media (max-width:960px){.statusboard{grid-template-columns:repeat(2,1fr)}}
   @media (max-width:560px){.statusboard{grid-template-columns:1fr}}
-  .sbgroup{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
-  .sbgroup h3{margin:0 0 8px;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+  .sbgroup{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px 17px;box-shadow:var(--shadow-sm)}
+  .sbgroup h3{margin:0 0 8px;font-size:13.5px;letter-spacing:.08em;text-transform:uppercase}
   .sbgroup.working h3{color:var(--green)} .sbgroup.fault h3{color:var(--red)}
   .sbgroup.unchecked h3{color:var(--blue)} .sbgroup.off h3{color:var(--grey)}
   .sbgroup ul{list-style:none;margin:0;padding:0}
   .sbgroup li{font-size:14px;color:var(--muted);padding:5px 0;border-top:1px dashed var(--line)}
   .sbgroup li:first-child{border-top:none}
   .sbgroup li .d{display:block;font-size:12px;color:var(--faint)}
-  .openitems{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-top:18px}
-  .openitems h2{margin:0 0 6px;font-size:19px}
+  .openitems{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    padding:17px 21px;margin-top:18px;box-shadow:var(--shadow-sm)}
+  .openitems h2{margin:0 0 6px;font-size:19px;font-family:ui-serif,Georgia,serif;font-weight:600}
   .openitems ol{margin:6px 0 0;padding-left:20px}
   .openitems li{margin:10px 0;color:var(--muted);font-size:15px}
   .openitems li strong{color:var(--text)}
   footer{color:var(--faint);font-size:13px;margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
-  /* SVG */
+  @media (max-width:560px){h1{font-size:32px}.brandmark{width:32px;height:32px}}
+  /* ===== SVG scene ===== */
   svg text{font-family:inherit}
-  .floorlabel{fill:var(--faint);font-size:12px;letter-spacing:.18em}
-  .roomlabel{fill:rgba(244,234,217,.34);font-size:12.5px}
-  .flow{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.16}
+  #skyStopA,#skyStopB{transition:stop-color 1.2s ease}
+  #sun,#sunHalo{transition:cx 1.2s ease, cy 1.2s ease, opacity 1.2s ease}
+  .ground{fill:var(--ground)}
+  .groundline{stroke:var(--groundline);stroke-width:2}
+  .band2{fill:var(--band2)} .band1{fill:var(--band1)} .band0{fill:var(--band0)}
+  .garage{fill:var(--garage);stroke:var(--slab);stroke-width:2.5}
+  .roofline{fill:none;stroke:var(--wall);stroke-linecap:round}
+  .walls{fill:none;stroke:var(--wall);stroke-width:3}
+  .slab{stroke:var(--slab);stroke-width:3}
+  .warm{fill:#ffab4a;opacity:0;transition:opacity 1.1s ease;pointer-events:none}
+  .warm.on{opacity:var(--warm-o)}
+  .win{fill:var(--win);stroke:var(--wall);stroke-width:1.6;transition:fill 1s ease}
+  .win.lit{fill:var(--winlit);filter:drop-shadow(0 0 7px var(--winlit))}
+  .floorlabel{fill:var(--floorlabel);font-size:12px;letter-spacing:.18em}
+  .roomlabel{fill:var(--roomlabel);font-size:12.5px}
+  .flow{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.16;transition:opacity .7s ease}
   .flow.gas{stroke:var(--gas)} .flow.heat{stroke:var(--heat)} .flow.water{stroke:var(--water)} .flow.elec{stroke:var(--elec)}
   .flow.on{opacity:.95;stroke-dasharray:2 10;animation:flowmove 1.1s linear infinite}
   .flow.dim{opacity:.45;stroke-dasharray:2 10;animation:flowmove 2.2s linear infinite}
   .flow.off{opacity:.13}
-  .flow.stopped{opacity:.4;stroke:var(--red);stroke-dasharray:5 6}
+  .flow.stopped{opacity:.45;stroke:var(--stopped);stroke-dasharray:5 6}
   @keyframes flowmove{to{stroke-dashoffset:-24}}
-  .comp{cursor:pointer}
-  .comp rect.body{fill:#2b2015;stroke:var(--grey);stroke-width:1.6;transition:all .25s}
+  .comp{cursor:pointer;transition:transform .25s ease}
+  .comp:hover{transform:translateY(-2px)}
+  .comp rect.body{fill:var(--tile);stroke:var(--line-strong);stroke-width:1.6;transition:all .5s ease}
   .comp:hover rect.body{stroke:var(--text)}
-  .comp.sel rect.body{stroke:var(--amber);stroke-width:2.6}
+  .comp.sel rect.body{stroke:var(--accent);stroke-width:2.6}
   .comp .t1{fill:var(--text);font-size:12.5px;font-weight:600;text-anchor:middle;pointer-events:none}
   .comp .t2{fill:var(--muted);font-size:10.5px;text-anchor:middle;pointer-events:none}
-  .comp .dot{stroke:#14100c;stroke-width:1.6}
+  .comp .dot{stroke:var(--dotring);stroke-width:1.6}
   .comp.s-working .dot,.comp.s-charging .dot{fill:var(--green)}
   .comp.s-heating .dot{fill:var(--heat)}
   .comp.s-ok .dot{fill:var(--green)}
@@ -105,7 +199,18 @@
   .comp.s-heating .pulse,.comp.s-reheat .pulse,.comp.s-fault .pulse,.comp.s-dead .pulse{animation:pulse 1.8s ease-out infinite}
   .comp.s-fault .pulse,.comp.s-dead .pulse{stroke:var(--red)}
   @keyframes pulse{0%{opacity:.7}100%{opacity:0}}
-  .utilbox{fill:#241a11;stroke:var(--line);rx:8}
+  /* cylinder water level */
+  .tankfill{fill:var(--water);opacity:.35;transform-box:fill-box;transform-origin:50% 100%;
+    transform:scaleY(.8);transition:transform 1.4s ease;pointer-events:none}
+  .tankfill.filling{animation:fillup 3.4s ease-in-out infinite alternate}
+  @keyframes fillup{from{transform:scaleY(.28)}to{transform:scaleY(.85)}}
+  /* boiler heat shimmer */
+  .shimmer path{fill:none;stroke:var(--heat);stroke-width:2.2;stroke-linecap:round;opacity:0}
+  .comp.s-heating .shimmer path,.comp.s-working .shimmer path{animation:shim 2.3s ease-in-out infinite}
+  .comp .shimmer path:nth-child(2){animation-delay:.35s}
+  .comp .shimmer path:nth-child(3){animation-delay:.7s}
+  @keyframes shim{0%{opacity:0;transform:translateY(3px)}35%{opacity:.55}100%{opacity:0;transform:translateY(-4px)}}
+  .utilbox{fill:var(--panel2);stroke:var(--line)}
   .utiltext{fill:var(--muted);font-size:11.5px;text-anchor:middle}
   .utiltext b{fill:var(--text)}
 </style>
@@ -113,8 +218,20 @@
 <body>
 <div class="wrap">
   <header>
-    <p class="kicker">Oak Lodge · House systems, drawn plainly</p>
-    <h1>The Bourne</h1>
+    <div class="topbar">
+      <div class="brand">
+        <svg class="brandmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11.2 12 3.8l8.5 7.4"/><path d="M5.6 9.8v10h12.8v-10"/><path d="M10 19.8v-5h4v5"/></svg>
+        <div>
+          <p class="kicker">Oak Lodge · House systems, drawn plainly</p>
+          <h1>The Bourne</h1>
+        </div>
+      </div>
+      <button id="themeToggle" class="themetoggle" type="button" aria-label="Switch between light and dark theme">
+        <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5 5l1.7 1.7M17.3 17.3 19 19M19 5l-1.7 1.7M6.7 17.3 5 19"/></svg>
+        <svg class="ic-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.2 13.6A8.4 8.4 0 1 1 10.4 3.8a6.8 6.8 0 0 0 9.8 9.8Z"/></svg>
+        <span id="themeLabel">Light</span>
+      </button>
+    </div>
     <p class="sub" id="summary"></p>
     <div class="chips" id="chips"></div>
   </header>
@@ -125,22 +242,43 @@
   <div class="layout">
     <div class="diagramcard">
       <svg id="house" viewBox="0 0 1000 760" width="100%" role="img" aria-label="Cross-section diagram of the house and its systems">
+        <!-- sky and scene -->
+        <defs id="defs">
+          <linearGradient id="skygrad" x1="0" y1="0" x2="0" y2="1">
+            <stop id="skyStopA" offset="0" stop-color="#c6d0cc"/>
+            <stop id="skyStopB" offset="1" stop-color="#ece5d5"/>
+          </linearGradient>
+          <radialGradient id="sunglow">
+            <stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/>
+            <stop offset="1" stop-color="#ffd98a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect x="0" y="0" width="1000" height="700" fill="url(#skygrad)"/>
+        <circle id="sunHalo" cx="838" cy="140" r="88" fill="url(#sunglow)" opacity=".2"/>
+        <circle id="sun" cx="838" cy="140" r="25" fill="#ffd98a" opacity=".14"/>
         <!-- architecture -->
-        <rect x="0" y="700" width="1000" height="60" fill="#0d0a07"/>
-        <line x1="0" y1="700" x2="1000" y2="700" stroke="#4a3826" stroke-width="2"/>
+        <rect class="ground" x="0" y="700" width="1000" height="60"/>
+        <line class="groundline" x1="0" y1="700" x2="1000" y2="700"/>
         <!-- house bands -->
-        <rect x="250" y="190" width="540" height="160" fill="#221810"/>
-        <rect x="250" y="350" width="540" height="160" fill="#1d140e"/>
-        <rect x="250" y="510" width="540" height="190" fill="#251a11"/>
+        <rect class="band2" x="250" y="190" width="540" height="160"/>
+        <rect class="band1" x="250" y="350" width="540" height="160"/>
+        <rect class="band0" x="250" y="510" width="540" height="190"/>
+        <!-- warmth glow on heated floors -->
+        <rect class="warm" id="warm2" x="250" y="190" width="540" height="160"/>
+        <rect class="warm" id="warm1" x="250" y="350" width="540" height="160"/>
+        <rect class="warm" id="warm0" x="250" y="510" width="540" height="190"/>
         <!-- roof -->
-        <path d="M238,196 L520,92 L802,196" fill="none" stroke="#5a4630" stroke-width="5" stroke-linecap="round"/>
+        <path class="roofline" d="M238,196 L520,92 L802,196" stroke-width="5"/>
         <!-- walls and slabs -->
-        <rect x="250" y="190" width="540" height="510" fill="none" stroke="#5a4630" stroke-width="3"/>
-        <line x1="250" y1="350" x2="790" y2="350" stroke="#4a3826" stroke-width="3"/>
-        <line x1="250" y1="510" x2="790" y2="510" stroke="#4a3826" stroke-width="3"/>
+        <rect class="walls" x="250" y="190" width="540" height="510"/>
+        <line class="slab" x1="250" y1="350" x2="790" y2="350"/>
+        <line class="slab" x1="250" y1="510" x2="790" y2="510"/>
         <!-- garage -->
-        <rect x="812" y="500" width="168" height="200" fill="#1d150e" stroke="#4a3826" stroke-width="2.5"/>
-        <path d="M804,502 L896,450 L988,502" fill="none" stroke="#5a4630" stroke-width="4" stroke-linecap="round"/>
+        <rect class="garage" x="812" y="500" width="168" height="200"/>
+        <path class="roofline" d="M804,502 L896,450 L988,502" stroke-width="4"/>
+        <!-- windows that glow when their floor is heated -->
+        <rect class="win" id="win2" x="259" y="266" width="26" height="48" rx="3"/>
+        <rect class="win" id="win1" x="259" y="424" width="26" height="48" rx="3"/>
         <!-- floor labels -->
         <text class="floorlabel" x="262" y="212">SECOND FLOOR</text>
         <text class="floorlabel" x="262" y="372">FIRST FLOOR</text>
@@ -213,6 +351,12 @@ for (const f of HOUSE.flows){
 
 /* components */
 const compsG = $("#comps");
+{ const cc = compsById["cyl"], cw = cc.w || 124, ch = 44;
+  const cp = document.createElementNS(NS, "clipPath"); cp.id = "cylclip";
+  const cr = document.createElementNS(NS, "rect");
+  cr.setAttribute("x", cc.x - cw / 2); cr.setAttribute("y", cc.y - ch / 2);
+  cr.setAttribute("width", cw); cr.setAttribute("height", ch); cr.setAttribute("rx", 10);
+  cp.appendChild(cr); document.getElementById("defs").appendChild(cp); }
 for (const c of HOUSE.components){
   const g = document.createElementNS(NS,"g");
   g.setAttribute("class","comp"); g.id = "comp-"+c.id;
@@ -220,6 +364,8 @@ for (const c of HOUSE.components){
   g.innerHTML =
     `<rect class="pulse" x="${x-5}" y="${y-5}" width="${w+10}" height="${h+10}" rx="13"></rect>`+
     `<rect class="body" x="${x}" y="${y}" width="${w}" height="${h}" rx="10"></rect>`+
+    (c.id==="cyl" ? `<rect class="tankfill" id="tankfill" clip-path="url(#cylclip)" x="${x}" y="${y}" width="${w}" height="${h}"></rect>` : "")+
+    (c.id==="boiler" ? `<g class="shimmer" transform="translate(${c.x},${y-3})"><path d="M-17,0 q4,-7 0,-14"/><path d="M0,-1 q4,-7 0,-14"/><path d="M17,0 q4,-7 0,-14"/></g>` : "")+
     `<text class="t1" x="${c.x}" y="${c.y-1}">${c.label[0]}</text>`+
     `<text class="t2" x="${c.x}" y="${c.y+15}">${c.label[1]||""}</text>`+
     `<circle class="dot" cx="${x+w-11}" cy="${y+11}" r="5.5"></circle>`;
@@ -247,8 +393,11 @@ function applyScenario(id){
     const el = document.getElementById("flow-"+f.id);
     el.setAttribute("class","flow "+f.kind+" "+scenario.flows[f.id]);
   }
-  $("#explain").innerHTML = `<h2>${scenario.name}</h2>` + scenario.explanation.map(p=>`<p>${p}</p>`).join("");
+  const ex = $("#explain");
+  ex.innerHTML = `<h2>${scenario.name}</h2>` + scenario.explanation.map(p=>`<p>${p}</p>`).join("");
+  ex.classList.remove("flash"); void ex.offsetWidth; ex.classList.add("flash");
   $("#caption").innerHTML = "<strong>Right now:</strong> " + scenario.caption;
+  applySky(); setTank(); setWarmth();
 }
 
 /* side panel */
@@ -275,6 +424,62 @@ $("#statusboard").innerHTML = HOUSE.statusBoard.map(g=>
 /* open items */
 $("#openitems").innerHTML = HOUSE.openItems.map(o=>
   `<li><strong>${o.title}.</strong> ${o.detail}</li>`).join("");
+
+/* theme and living sky */
+const SKY = {
+  normal:{light:{a:"#a9d0ea", b:"#f7ecd4", sun:[838, 116, .9]},  dark:{a:"#14222f", b:"#251b11", sun:[838, 116, .5]}},
+  baths: {light:{a:"#f4bd7f", b:"#fdf0d7", sun:[852, 318, .95]}, dark:{a:"#54331b", b:"#211510", sun:[852, 318, .75]}},
+  today: {light:{a:"#c6d0cc", b:"#ece5d5", sun:[838, 140, .14]}, dark:{a:"#1f2426", b:"#16120e", sun:[838, 140, .08]}}
+};
+function effTheme(){
+  const t = document.documentElement.getAttribute("data-theme");
+  if (t) return t;
+  return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+}
+function applySky(){
+  const s = SKY[scenario.id][effTheme()];
+  const a = document.getElementById("skyStopA"), b = document.getElementById("skyStopB");
+  if (a) a.style.stopColor = s.a;
+  if (b) b.style.stopColor = s.b;
+  const sun = document.getElementById("sun"), halo = document.getElementById("sunHalo");
+  if (sun){ sun.style.cx = s.sun[0] + "px"; sun.style.cy = s.sun[1] + "px"; sun.style.opacity = s.sun[2]; }
+  if (halo){ halo.style.cx = s.sun[0] + "px"; halo.style.cy = s.sun[1] + "px"; halo.style.opacity = Math.min(1, s.sun[2] + .08); }
+}
+function setTank(){
+  const tf = document.getElementById("tankfill");
+  if (!tf) return;
+  const st = scenario.components["cyl"];
+  tf.classList.toggle("filling", st === "reheat");
+  tf.style.transform = "scaleY(" + (st === "reheat" ? .45 : st === "ok" ? .82 : .6) + ")";
+}
+function setWarmth(){
+  const tog = (id, cls, on) => { const el = document.getElementById(id); if (el) el.classList.toggle(cls, on); };
+  tog("warm0", "on", scenario.components["loops"] === "heating");
+  tog("warm1", "on", scenario.components["rads"] === "heating");
+  tog("warm2", "on", scenario.components["rad2"] === "heating");
+  tog("win1", "lit", scenario.components["rads"] === "heating");
+  tog("win2", "lit", scenario.components["rad2"] === "heating");
+}
+function updateThemeUI(){
+  const l = document.getElementById("themeLabel");
+  if (l) l.textContent = effTheme() === "dark" ? "Dark" : "Light";
+}
+(function initTheme(){
+  try { const s = localStorage.getItem("bourne-theme"); if (s) document.documentElement.setAttribute("data-theme", s); } catch(e) {}
+  updateThemeUI();
+})();
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const t = effTheme() === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", t);
+  try { localStorage.setItem("bourne-theme", t); } catch(e) {}
+  updateThemeUI(); applySky();
+});
+if (window.matchMedia){
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  if (mq.addEventListener) mq.addEventListener("change", () => {
+    if (!document.documentElement.getAttribute("data-theme")){ updateThemeUI(); applySky(); }
+  });
+}
 
 applyScenario(scenario.id);
 select(selected);
