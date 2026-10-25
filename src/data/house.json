@@ -894,10 +894,6 @@
   {
    "detail": "The controller's two circuits were renamed RADIATORS (was HEATING 1) and UNDERFLOOR (was HEATING 2) by Zonito on 25 Oct 2026, on the strength of the analysis that the first serves the radiators and the second the underfloor heating, and confirmed set and saved at the controller; the installer-screen confirmation is now optional. The menus also include a hot water Circulation programme (Monday as found on 25 Oct 2026: 05:00 to 11:30, 12:30 to 16:30 and 18:00 to 23:00, left unchanged); whether a circulation pump is actually fitted is unverified.",
    "title": "For the engineer: is there a circulation pump fitted?"
-  },
-  {
-   "detail": "A cupboard box believed to be the ADT alarm panel had popped out; Zonito pushed it back in on the morning of 25 Oct 2026 and found it empty. Most likely it is the emptied enclosure of the previous owners' alarm: the ADT paperwork records a takeover in which the old Visonic package was replaced by a newer Qolsys hub package. Where the live ADT panel is mounted is unconfirmed. Full cupboard inventory: Drive, Household/Electrics, 'Under-stairs cupboard boxes - what they are (25 Oct 2026)'.",
-   "title": "Alarm: which box is the live ADT panel?"
   }
  ],
  "scenarios": [
