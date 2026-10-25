@@ -5,7 +5,7 @@ import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     tanstackStart({
       // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
@@ -14,6 +14,10 @@ export default defineConfig({
     viteReact(),
     tailwindcss(),
     tsconfigPaths(),
-    nitro(),
+    // Nitro only bundles the production server (npm run build → .output/).
+    // In dev it sits in front of Vite's module middleware and 404s .json
+    // module requests (e.g. /src/data/house.json?import), which breaks route
+    // hydration in real browsers, so it stays out of `vite dev`.
+    ...(command === "build" ? [nitro()] : []),
   ],
-});
+}));
