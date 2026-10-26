@@ -9,7 +9,7 @@ describe("status rules", () => {
     expect(toneOf("off")).toBe("idle");
     expect(toneOf("idle")).toBe("idle");
   });
-  it("today has the wiring centre with no power", () => {
-    expect(HOUSE.scenarios.find((s) => s.id === "today")!.components["wiring"]).toBe("dead");
+  it("today has the wiring centre powered (spur fuse replaced 26 Oct 2026)", () => {
+    expect(HOUSE.scenarios.find((s) => s.id === "today")!.components["wiring"]).toBe("ok");
   });
 });

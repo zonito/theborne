@@ -258,7 +258,7 @@
    "y": 640
   },
   {
-   "detail": "Fault state on 24 Oct 2026: POWER light dark, every zone light dark, the Drayton LP711 timer beside it also blank, while every consumer unit breaker was on. Fix is an electrician visit.",
+   "detail": "Power was lost on 24 Oct 2026 (POWER light dark, the Drayton LP711 timer beside it also blank) and restored on 26 Oct 2026: the 3 amp fuse in the wall spur feeding this box had blown and was replaced like for like. The box's own 5 amp board fuse was never the fault.",
    "drive": [
     {
      "label": "Underfloor heating fault: findings and costs (Drive)",
@@ -278,7 +278,7 @@
     }
    ],
    "floor": "Ground floor",
-   "how": "When a thermostat calls for heat, this box powers open that zone's actuator valve, starts the manifold pump and asks the boiler for heat. Its valves are normally shut, so with no power nothing can flow. Its board fuse is a 5 amp anti-surge 20 mm glass fuse, currently stuck fast in its clips. The Zone 4 pump control switch was found set to NO and was moved to YES on 24 Oct 2026, which is correct for underfloor heating, but the box still has no power.",
+   "how": "When a thermostat calls for heat, this box powers open that zone's actuator valve, starts the manifold pump and asks the boiler for heat. Its valves are normally shut, so with no power nothing can flow. It is fed from a wall spur with a standard 3 amp plug-type fuse. Its own board fuse is a 5 amp anti-surge 20 mm glass fuse, stuck fast in its clips and never touched. The Zone 4 pump control switch was found set to NO and moved to YES on 24 Oct 2026, which is correct for underfloor heating.",
    "id": "wiring",
    "label": [
     "Wiring centre",
@@ -287,9 +287,9 @@
    "name": "Underfloor wiring centre",
    "room": "Under-stairs cupboard",
    "status": {
-    "date": "Found 24 Oct 2026",
-    "kind": "fault",
-    "label": "No power"
+    "date": "26 Oct 2026",
+    "kind": "working",
+    "label": "Working, power restored"
    },
    "w": 124,
    "what": "A Polypipe UFH4ZW wiring centre. It is the brain of the ground floor underfloor heating: it listens to the room thermostats and opens the valves on the manifold.",
@@ -297,7 +297,7 @@
    "y": 648
   },
   {
-   "detail": "Pump green light on, flow gauges near zero on all four loops, 24 Oct 2026.",
+   "detail": "On 24 Oct 2026 the pump ran with all four flow gauges near zero, because the dead wiring centre held the valves shut. Power was restored on 26 Oct 2026; flow returns when a thermostat calls for heat.",
    "drive": [
     {
      "label": "Underfloor heating fault: findings and costs (Drive)",
@@ -313,7 +313,7 @@
     }
    ],
    "floor": "Ground floor",
-   "how": "The pump pushes warm water around the loops under the floor. The mixing valve blends the water down to a gentle floor temperature. Each loop has a flow gauge and a valve motor (actuator) opened by the wiring centre. Loop 2 has a plain manual cap instead of a motor, so it has no automatic control. With the wiring centre dead, the pump runs but the valves stay shut and all four gauges read near zero.",
+   "how": "The pump pushes warm water around the loops under the floor. The mixing valve blends the water down to a gentle floor temperature. Each loop has a flow gauge and a valve motor (actuator) opened by the wiring centre. Loop 2 has a plain manual cap instead of a motor, so it has no automatic control. When no zone calls, the valves stay shut and the gauges read near zero; on a call, the open loop's gauge rises to about 2.",
    "id": "manifold",
    "label": [
     "UFH manifold",
@@ -322,9 +322,9 @@
    "name": "Underfloor manifold and pump",
    "room": "Under-stairs cupboard",
    "status": {
-    "date": "Found 24 Oct 2026",
-    "kind": "fault",
-    "label": "Pump runs, no flow"
+    "date": "26 Oct 2026",
+    "kind": "working",
+    "label": "Working"
    },
    "w": 124,
    "what": "The pipe hub for the floor heating: two brass bars, four floor loops, a Grundfos UPS2 25-40/60 pump, a thermostatic mixing valve and four flow gauges.",
@@ -353,9 +353,9 @@
    "y": 548
   },
   {
-   "detail": "This is the visible symptom of the wiring centre power fault, not a fault in the floor itself.",
+   "detail": "The floor was cold while the wiring centre had no power (24 to 26 Oct 2026). That was a symptom of the power fault, not a fault in the floor itself.",
    "floor": "Ground floor",
-   "how": "Warm water flowing through the loops turns the whole floor into a slow, gentle radiator. A working loop feels warm underfoot. Right now no water can enter the loops because the manifold valves are held shut by the dead wiring centre, so the floor stays cold and the living hall stalls near 20 C.",
+   "how": "Warm water flowing through the loops turns the whole floor into a slow, gentle radiator. A working loop feels warm underfoot. With the wiring centre powered again since 26 Oct 2026, the valves open on a thermostat call and the floor warms gently. A cold floor with the room below target is the symptom to watch.",
    "id": "loops",
    "label": [
     "Floor loops x4",
@@ -364,9 +364,9 @@
    "name": "Floor loops",
    "room": "Under the ground floor",
    "status": {
-    "date": "Found 24 Oct 2026",
-    "kind": "fault",
-    "label": "Cold, no water flowing"
+    "date": "26 Oct 2026",
+    "kind": "working",
+    "label": "Working"
    },
    "w": 150,
    "what": "Four loops of pipe buried in the ground floor screed: one for the entry lobby and the rest across the open-plan living hall.",
@@ -884,12 +884,12 @@
   "name": "The Bourne",
   "note": "This file is the source of truth. The web page renders from a copy of this model. Edit this file first, then refresh the copy inside index.html.",
   "summary": "How this house works: heating, hot water and power, drawn as one picture.",
-  "verified": "Facts checked at the house on 24 and 25 October 2026."
+  "verified": "Facts checked at the house on 24, 25 and 26 October 2026."
  },
  "openItems": [
   {
-   "detail": "One visit covers both faults. Estimate: 100 to 200 pounds on a weekday; worst case about 500 pounds on a Saturday if the wiring centre board itself needs replacing.",
-   "title": "Electrician visit: wiring centre power and the Dimplex"
+   "detail": "The underfloor heating power fault is fixed (wall spur fuse replaced 26 Oct 2026), so one visit now covers the Dimplex Quantum storage heater plus checks: what controls the Honeywell motorised valve, loop 2's manual cap, and whether the wiring centre's hot water output is wired to anything. Estimate: 100 to 200 pounds on a weekday.",
+   "title": "Electrician visit: Dimplex Quantum, plus heating checks"
   },
   {
    "detail": "The controller's two circuits were renamed RADIATORS (was HEATING 1) and UNDERFLOOR (was HEATING 2) by Zonito on 25 Oct 2026, on the strength of the analysis that the first serves the radiators and the second the underfloor heating, and confirmed set and saved at the controller; the installer-screen confirmation is now optional. The menus also include a hot water Circulation programme (Monday as found on 25 Oct 2026: 05:00 to 11:30, 12:30 to 16:30 and 18:00 to 23:00, left unchanged); whether a circulation pump is actually fitted is unverified.",
@@ -1000,7 +1000,7 @@
    "name": "Morning baths"
   },
   {
-   "caption": "Floor: cold · Tank: hot · Radiators: on · Controller clock: fixed",
+   "caption": "Floor: power back · Tank: hot · Radiators: on · Spur fuse replaced",
    "components": {
     "bath2": "off",
     "bathE": "off",
@@ -1013,7 +1013,7 @@
     "cyl": "ok",
     "dimplex": "fault",
     "elecmeter": "ok",
-    "loops": "cold",
+    "loops": "idle",
     "manifold": "idle",
     "meters": "ok",
     "rad2": "heating",
@@ -1021,7 +1021,7 @@
     "sink": "idle",
     "stats": "calling",
     "wallbox": "idle",
-    "wiring": "dead"
+    "wiring": "ok"
    },
    "explanation": [
     "Today, 25 October 2026: the underfloor wiring centre has no power, so its valves stay shut, no water enters the floor loops, and the living hall stalls near 20 C with a cold floor.",
@@ -1088,6 +1088,10 @@
     {
      "date": "25 Oct 2026",
      "label": "En-suite electric floor: on, manual 20.0 C"
+    },
+    {
+     "date": "26 Oct 2026",
+     "label": "Underfloor wiring centre: power restored (spur fuse)"
     }
    ],
    "kind": "working"
@@ -1095,10 +1099,6 @@
   {
    "group": "Faulty",
    "items": [
-    {
-     "date": "24 Oct 2026",
-     "label": "Underfloor wiring centre: no power"
-    },
     {
      "date": "24 Oct 2026",
      "label": "Dimplex Quantum: cuts out in minutes"
