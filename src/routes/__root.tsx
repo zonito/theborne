@@ -3,7 +3,6 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
-  useRouter,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -34,9 +33,22 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: ErrorComponentProps) {
-  console.error(error);
-  const router = useRouter();
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  try {
+    return JSON.stringify(error) ?? "Unknown error";
+  } catch {
+    return "Unknown error";
+  }
+}
+
+function ErrorComponent({ error }: ErrorComponentProps) {
+  // Chunk-load failures (e.g. the dev server restarted while this tab was
+  // loading) reject the lazy route import. router.invalidate() cannot refetch
+  // a rejected module, so retry with a full document reload — the only
+  // recovery that refetches the page's JavaScript.
+  const message = errorMessage(error);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -47,12 +59,17 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         <p className="mt-2 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
+        <details className="mx-auto mt-3 max-w-full">
+          <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+            Error details
+          </summary>
+          <pre className="mt-2 overflow-x-auto rounded-md border p-2 text-left text-xs text-muted-foreground">
+            {message}
+          </pre>
+        </details>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
+            onClick={() => window.location.reload()}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Try again
@@ -75,9 +92,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "The Bourne · House systems" },
-      { name: "description", content: "How the house at The Bourne works: heating, hot water and power." },
+      {
+        name: "description",
+        content: "How the house at The Bourne works: heating, hot water and power.",
+      },
       { property: "og:title", content: "The Bourne · House systems" },
-      { property: "og:description", content: "How the house at The Bourne works: heating, hot water and power." },
+      {
+        property: "og:description",
+        content: "How the house at The Bourne works: heating, hot water and power.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
