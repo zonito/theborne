@@ -884,12 +884,12 @@
   "name": "The Bourne",
   "note": "This file is the source of truth. The web page renders from a copy of this model. Edit this file first, then refresh the copy inside index.html.",
   "summary": "How this house works: heating, hot water and power, drawn as one picture.",
-  "verified": "Facts checked at the house on 24, 25 and 26 October 2026."
+  "verified": "Facts checked at the house on 24, 25, 26 and 27 October 2026."
  },
  "openItems": [
   {
-   "detail": "The underfloor heating power fault is fixed (wall spur fuse replaced 26 Oct 2026), so one visit now covers the Dimplex Quantum storage heater plus checks: what controls the Honeywell motorised valve, loop 2's manual cap, and whether the wiring centre's hot water output is wired to anything. Estimate: 100 to 200 pounds on a weekday.",
-   "title": "Electrician visit: Dimplex Quantum, plus heating checks"
+   "detail": "The Dimplex Quantum storage heater in the utility room cuts out: on 26 Oct 2026 it ran over 30 minutes, then went dark again, and it stays off at the wall. The other job is the loose wire feeding the Drayton LP711 timer: the timer works, but its feed connection is intermittent and must be remade soundly. Standing checks if time allows: what controls the Honeywell manifold valve, the loop 2 manual cap, and whether a hot water circulation pump is fitted. Nothing is urgent: the floor heating is running.",
+   "title": "Electrician visit: Dimplex Quantum, plus the loose timer wire"
   },
   {
    "detail": "The controller's two circuits were renamed RADIATORS (was HEATING 1) and UNDERFLOOR (was HEATING 2) by Zonito on 25 Oct 2026, on the strength of the analysis that the first serves the radiators and the second the underfloor heating, and confirmed set and saved at the controller; the installer-screen confirmation is now optional. The menus also include a hot water Circulation programme (Monday as found on 25 Oct 2026: 05:00 to 11:30, 12:30 to 16:30 and 18:00 to 23:00, left unchanged); whether a circulation pump is actually fitted is unverified.",
@@ -1092,6 +1092,10 @@
     {
      "date": "26 Oct 2026",
      "label": "Underfloor wiring centre: power restored (spur fuse)"
+    },
+    {
+     "date": "27 Oct 2026",
+     "label": "Underfloor heating: running, timer 05:30-22:30"
     }
    ],
    "kind": "working"
